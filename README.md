@@ -31,13 +31,23 @@ Will result in the following items being published:
 
 # Installing
 
-The code is written in javascript and runs in nodejs. For ease of running under Heroku a Procfile is included. So, for best results you want to have npm and bundler installed.
+The code is written in javascript and runs in nodejs. For ease of running under Heroku a Procfile is included so you'll need foreman to run it. The Gemfile and package.json will have everything you need.
 
-    $ bundle install
+    $ bundle install 
     $ npm install
     $ foreman start
 
 To just run either the `tracks` or `artworks` process only, set the ONLY environment variable when you call foreman:
 
     $ ONLY=artworks foreman start
- 
+
+ # Deploying to Heroku
+
+ Since this project has a Gemfile and package.json, Heroku wrongly assumes it's a Ruby project. To get around this, create the app with the nodejs buildpack:
+
+    $ heroku create -s cedar --buildpack https://github.com/heroku/heroku-buildpack-nodejs
+
+Or, if you've already created the app, add this config var:
+
+    $ heroku config:add BUILDPACK_URL=https://github.com/heroku/heroku-buildpack-nodejs
+
