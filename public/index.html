@@ -1,0 +1,40 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Live tracks</title>
+  </head>
+  <body>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="/faye/client.js"></script>
+    <script>
+
+      initVis();
+
+      var client = new Faye.Client('http://localhost:8000/faye');
+      var subscription = client.subscribe('/artwork', function(message) {
+        update(message);
+      });
+      
+      var root;
+
+      function initVis() {
+        root = d3.select('body')
+                 .append('div')
+                 .attr('class', 'vis');
+      }
+
+      function update(data) {
+        console.log('update', data)
+        var node = root.selectAll('div')
+                       .data([data], function (d) { return d.service; });
+
+        node.enter()
+            .append('img');
+
+        node.attr('src', function (d) { return d.url; })
+            .attr('title', function (d) { return d.service; });
+      }
+
+    </script>
+  </body>
+</html>
